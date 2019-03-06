@@ -52,8 +52,9 @@ class GithubUser
     $this->login = $username;
 
     //Load user info
-    $this->getUserFromGithub($username);
-
+    if(!$this->getUserFromRedis($username)) {
+      $this->getUserFromGithub($username);
+    }
   // Validate Required user info
     $this->validateRequiredFields();
   }
@@ -85,8 +86,11 @@ class GithubUser
           {$response->getBody()->getContents()}", $e->getCode()
       );
     }
-    $body = $response->getBody();
-    $this->loadFromJson($body);
+    $userInfo = $response->getBody();
+    $this->loadFromJson($userInfo);
+    $this->saveUserInRedis($userInfo);
+    unset($client);
+    
   }
 
   private function loadFromJson($githubJson) {
@@ -96,6 +100,23 @@ class GithubUser
             $this->$property = $value;
           }
       }
+  }
+
+  private function getUserFromRedis($username) {
+    try {
+        $user = Redis::get($username);
+        $this->loadFromJson($username);
+    } catch (\Exception $e) {
+      return false;
+    }
+  }
+
+  private function saveUserInRedis($userInfo) {
+    try{
+      Redis::set($this->login, $userInfo);
+    } catch(\Exception $e) {
+      throw new \Exception("Error Saving User in REDIS", 4);
+    }
   }
 
 }
