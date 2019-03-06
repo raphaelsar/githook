@@ -137,6 +137,7 @@ class GithubUser
     if(!$this->getUserRepositoryFromRedis($this->login)) {
       $this->getUserRepositoryFromGithub($this->login);
     }
+    return $this;
   }
 
   private function getUserRepositoryFromGithub() {
@@ -165,7 +166,7 @@ class GithubUser
       $jsonObj = json_decode($githubJson);
       foreach($jsonObj as $jsonRepository) {
         $repo = new GithubRepository($jsonRepository, $this->login);
-        array_push($this->repositories, $repo);
+        array_push($this->repositories, $repo->toJson());
       }
   }
 
@@ -186,6 +187,10 @@ class GithubUser
     } catch(\Exception $e) {
       throw new \Exception("Error Saving User in REDIS", 4);
     }
+  }
+
+  public function reposToJson() {
+    return json_encode($this->repositories);
   }
 
 }

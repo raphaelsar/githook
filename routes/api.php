@@ -20,5 +20,5 @@ Route::middleware('api')->get('/users/{username}', function ($username) {
 
 Route::middleware('api')->get('/users/{username}/repos', function ($username) {
     $githubUser = new GithubUser($username);
-    $githubUser->getGithubRepository();
+    return $githubUser->getGithubRepository()->reposToJson();
 });

@@ -107,14 +107,14 @@ class GithubRepository
   }
   public function toJson()
   {
-    $userArray = [
-      'login' => $this->login,
+    $repoArray = [
       'id' => $this->id,
-      'avatar_url' => $this->avatar_url,
+      'name' => $this->name,
+      'description' => $this->description,
       'html_url' => $this->html_url,
     ];
 
-    return json_encode($userArray);
+    return json_encode($repoArray);
   }
 }
 ?>
