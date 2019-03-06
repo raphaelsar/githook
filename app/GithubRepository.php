@@ -80,16 +80,17 @@ class GithubRepository
   private $default_branch = null;
 
   private $requiredFields = [
-    "id", "name", "description", "html_url"
+    "id", "name" , "html_url"
   ];
 
   public function __construct($jsonRepository, $username) {
-    $this->loadFromJson($username);
+    $this->loadFromJson($jsonRepository);
     $this->owner = $username;
     $this->validateRequiredFields();
   }
 
   private function validateRequiredFields() {
+
     foreach ($this->requiredFields as $field) {
       if (is_null($this->$field)) {
         throw new \Exception("Missing field.{$field} is Required", 1);
@@ -97,14 +98,13 @@ class GithubRepository
     }
   }
   private function loadFromJson($githubJson) {
-      $jsonObj = json_decode($githubJson);
-      foreach($jsonObj as $property => $value) {
+      foreach($githubJson as $property => $value) {
+
           if( is_null( $this->$property ) ) {
             $this->$property = $value;
           }
       }
   }
-
   public function toJson()
   {
     $userArray = [
@@ -116,6 +116,5 @@ class GithubRepository
 
     return json_encode($userArray);
   }
-
 }
 ?>
