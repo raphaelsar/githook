@@ -90,7 +90,7 @@ class GithubUser
     $this->loadFromJson($userInfo);
     $this->saveUserInRedis($userInfo);
     unset($client);
-    
+
   }
 
   private function loadFromJson($githubJson) {
@@ -117,6 +117,18 @@ class GithubUser
     } catch(\Exception $e) {
       throw new \Exception("Error Saving User in REDIS", 4);
     }
+  }
+
+  public function toJson()
+  {
+    $userArray = [
+      'login' => $this->login,
+      'id' => $this->id,
+      'avatar_url' => $this->avatar_url,
+      'html_url' => $this->html_url,
+    ];
+
+    return json_encode($userArray);
   }
 
 }

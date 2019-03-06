@@ -15,10 +15,10 @@ use App\GithubUser;
 
 Route::middleware('api')->get('/users/{username}', function ($username) {
   $githubUser = new GithubUser($username);
-
-    return $username;
+    return $githubUser->toJson();
 });
 
 Route::middleware('api')->get('/users/{username}/repos', function ($username) {
-    return $username;
+    $githubUser = new GithubUser($username);
+    
 });
