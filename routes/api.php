@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-
+use App\GithubUser;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +14,8 @@ use Illuminate\Http\Request;
 */
 
 Route::middleware('api')->get('/users/{username}', function ($username) {
+  $githubUser = new GithubUser($username);
+
     return $username;
 });
 
