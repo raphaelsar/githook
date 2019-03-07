@@ -93,14 +93,17 @@ class GithubUser
 
   public function toJson()
   {
-    $userArray = [
+    return json_encode($this->toArray());
+  }
+
+  public function toArray()
+  {
+    return [
       'login' => $this->login,
       'id' => $this->id,
       'avatar_url' => $this->avatar_url,
       'html_url' => $this->html_url,
     ];
-
-    return json_encode($userArray);
   }
 
   public function getGithubRepository() {

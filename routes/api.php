@@ -14,11 +14,41 @@ use App\GithubUser;
 */
 
 Route::middleware('api')->get('/users/{username}', function ($username) {
-  $githubUser = new GithubUser($username);
-    return $githubUser->toJson();
+  $responseArr = [
+    'type'=>'response',
+    'body'=>'',
+  ];
+
+  try{
+    $githubUser = new GithubUser($username);
+    $responseArr['body'] = $githubUser->toArray();
+    $statusCode = 200;
+  } catch (\Exception $e) {
+    $responseArr['type'] = "error";
+    $responseArr['body'] = $e->getMessage();
+    $statusCode = 500;
+  }
+  return response(json_encode($responseArr), $statusCode)->header('Content-Type', 'application/json');
 });
 
 Route::middleware('api')->get('/users/{username}/repos', function ($username) {
+  $responseArr = [
+    'type'=>'response',
+    'body'=>'',
+  ];
+
+  try{
     $githubUser = new GithubUser($username);
-    return $githubUser->getGithubRepository()->reposToJson();
+    $responseArr['body'] = $githubUser->getGithubRepository()->reposToJson();
+    $statusCode = 200;
+  } catch (\Exception $e) {
+    $responseArr['type'] = "error";
+    $responseArr['body'] = $e->getMessage();
+    $statusCode = 500;
+  }
+  return response(json_encode($responseArr), $statusCode)->header('Content-Type', 'application/json');
+
+
+    $githubUser = new GithubUser($username);
+    return
 });
