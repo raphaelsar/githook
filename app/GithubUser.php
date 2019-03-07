@@ -42,7 +42,7 @@ class GithubUser
     }
   }
 
-  public function validateUserName($username):bool {
+  private function validateUserName($username):bool {
     return preg_match($this->usernameRegExp, $username);
   }
 
