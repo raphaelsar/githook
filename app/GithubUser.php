@@ -36,7 +36,8 @@ class GithubUser
 
   public function validateRequiredFields() {
     foreach ($this as $key=>$value) {
-      if (isset($this->$key) && is_null($value) ) {
+
+      if (is_null($value) ) {
         throw new \Exception("Missing field.{$key} is Required", 1);
       }
     }

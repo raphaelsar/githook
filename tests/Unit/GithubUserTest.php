@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Unit;
 use Tests\TestCase;
 use App\GithubUser;
@@ -56,15 +55,47 @@ class GithubUserTest extends TestCase
         "repos_url" => 'http://repos_example.com',
       ];
 
-      $minimalJson = json_encode($minimalArray);
+      $this->loadJsonTest($minimalArray);
+    }
 
-      $this->userMock->loadFromJson($minimalJson);
+    public function testLoadJsonWithExtraFieldsInJson() {
+      $extraFieldsArray = [
+        "login" => 'saponeis',
+        "id" => 123,
+        "avatar_url" => 'http://avatar_example.com',
+        "html_url" => 'http://html_example.com',
+        "url" => 'http://url_example.com',
+        "repos_url" => 'http://repos_example.com',
+        "name" => 'Raphael Ramos',
+      ];
+
+      $this->loadJsonTest($extraFieldsArray);
+    }
+
+    /**
+     * @expectedException Exception
+     */
+    public function testLoadJsonWithoutMinimalRequiriments() {
+      $minimalArray = [
+        "login" => 'saponeis',
+        "id" => 123,
+        "avatar_url" => 'teste'
+      ];
+      $this->loadJsonTest($minimalArray);
+    }
+
+    private function loadJsonTest($payload) {
+      $json = json_encode($payload);
+
+      $this->userMock->loadFromJson($json);
+      $this->userMock->validateRequiredFields();
+
       $responseArray = $this->userMock->toArray();
 
-      $this->assertEquals($minimalArray['login'] , $responseArray['login']);
-      $this->assertEquals($minimalArray['id'] , $responseArray['id']);
-      $this->assertEquals($minimalArray['avatar_url'] , $responseArray['avatar_url']);
-      $this->assertEquals($minimalArray['html_url'] , $responseArray['html_url']);
+      $this->assertEquals($payload['login'] , $responseArray['login']);
+      $this->assertEquals($payload['id'] , $responseArray['id']);
+      $this->assertEquals($payload['avatar_url'] , $responseArray['avatar_url']);
+      $this->assertEquals($payload['html_url'] , $responseArray['html_url']);
     }
 
 }
