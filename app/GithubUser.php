@@ -16,8 +16,8 @@ class GithubUser
   private $repos_url = null;
 
   private $repositories = [];
-
   private $usernameRegExp = "/^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i";
+
 
   public function __construct($username) {
     //Simple validation  for usernames/logins:
@@ -34,7 +34,7 @@ class GithubUser
     $this->validateRequiredFields();
   }
 
-  private function validateRequiredFields() {
+  public function validateRequiredFields() {
     foreach ($this as $key=>$value) {
       if (isset($this->$key) && is_null($value) ) {
         throw new \Exception("Missing field.{$key} is Required", 1);
@@ -42,7 +42,7 @@ class GithubUser
     }
   }
 
-  private function validateUserName($username):bool {
+  public function validateUserName($username):bool {
     return preg_match($this->usernameRegExp, $username);
   }
 
@@ -67,7 +67,7 @@ class GithubUser
     unset($client);
   }
 
-  private function loadFromJson($githubJson) {
+  public function loadFromJson($githubJson) {
     $jsonObj = json_decode($githubJson);
     foreach($jsonObj as $property => $value) {
       $this->$property = $value;
@@ -139,7 +139,7 @@ class GithubUser
       $jsonObj = json_decode($githubJson);
       foreach($jsonObj as $jsonRepository) {
         $repo = new GithubRepository($jsonRepository, $this->login);
-        array_push($this->repositories, $repo->toJson());
+        array_push($this->repositories, $repo->toArray());
       }
   }
 
@@ -160,6 +160,10 @@ class GithubUser
     } catch(\Exception $e) {
       throw new \Exception("Error Saving User in REDIS", 4);
     }
+  }
+
+  public function getRepositiories(){
+    return $this->repositories;
   }
 
   public function reposToJson() {

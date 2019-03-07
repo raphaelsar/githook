@@ -35,16 +35,17 @@ class GithubRepository
     }
   }
 
-  public function toJson() {
-    $repoArray = [
+  public function toArray() {
+    return [
       'id' => $this->id,
       'name' => $this->name,
       'description' => $this->description,
       'html_url' => $this->html_url,
     ];
+  }
 
-    return json_encode($repoArray);
-
+  public function toJson() {
+    return json_encode($this->toArray());
   }
 }
 ?>

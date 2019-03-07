@@ -39,7 +39,7 @@ Route::middleware('api')->get('/users/{username}/repos', function ($username) {
 
   try{
     $githubUser = new GithubUser($username);
-    $responseArr['body'] = $githubUser->getGithubRepository()->reposToJson();
+    $responseArr['body'] = $githubUser->getGithubRepository()->getRepositiories();
     $statusCode = 200;
   } catch (\Exception $e) {
     $responseArr['type'] = "error";
@@ -47,8 +47,4 @@ Route::middleware('api')->get('/users/{username}/repos', function ($username) {
     $statusCode = 500;
   }
   return response(json_encode($responseArr), $statusCode)->header('Content-Type', 'application/json');
-
-
-    $githubUser = new GithubUser($username);
-    return
 });
