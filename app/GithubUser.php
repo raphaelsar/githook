@@ -18,7 +18,6 @@ class GithubUser
   private $repositories = [];
   private $usernameRegExp = "/^[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}$/i";
 
-
   public function __construct($username) {
     //Simple validation  for usernames/logins:
     if (!$this->validateUserName($username)) {
@@ -71,6 +70,9 @@ class GithubUser
   public function loadFromJson($githubJson) {
     $jsonObj = json_decode($githubJson);
     foreach($jsonObj as $property => $value) {
+      if (is_null($value)){
+        $value = '';
+      }
       $this->$property = $value;
     }
   }
